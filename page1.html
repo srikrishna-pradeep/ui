@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Selection</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background">
+        <header class="header">
+            <div class="logo-title">
+                <img src="feedback-icon.svg" alt="Feedback Logo" class="logo">
+                <h1 class="title">Task Selection</h1>
+            </div>
+            <div class="user-profile">
+                <img src="avatar.png" alt="User Avatar" class="avatar">
+                <div class="dropdown">
+                    <ul>
+                        <li>Profile</li>
+                        <li>Logout</li>
+                        <li>Settings</li>
+                        <li>Help</li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <nav class="navbar">
+            <ul>
+                <li class="active">Home</li>
+                <li>Tasks</li>
+                <li>Reports</li>
+                <li>Settings</li>
+            </ul>
+        </nav>
+        <main class="content">
+            <div class="card">
+                <div class="task-option">
+                    <h2>Generate Raw Results</h2>
+                    <input type="text" placeholder="Enter ID" aria-label="Task ID">
+                    <button class="submit-btn">Submit</button>
+                    <div class="status">Status: Waiting...</div>
+                    <button class="copy-btn">Copy <span class="icon">📋</span></button>
+                </div>
+                <div class="task-option">
+                    <h2>Generate Consensus Report</h2>
+                    <button class="navigate-btn">Configure</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
