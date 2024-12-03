@@ -397,6 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleButtons();
     }
 
+    // This is for tasks.html
     const tasksArray = [
         {
             runDate: new Date().toLocaleDateString(),
@@ -487,4 +488,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
