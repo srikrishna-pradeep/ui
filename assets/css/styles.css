@@ -1,15 +1,20 @@
 /* General Styles */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'UberMove', 'Inter', sans-serif; /* Use UberMove font if available, fallback to Inter */
     margin: 0;
     padding: 0;
-    background: linear-gradient(180deg, #E0F7FA, #E8F5E9);
-    color: #333;
+    background: #F5F5F5; /* Uber's light gray background */
+    color: #222222; /* Dark gray text for better contrast */
+}
+
+/* Ensure font for headings, labels, and inputs */
+h1, h2, h3, h4, h5, h6, label, input, textarea, button {
+    font-family: 'UberMove', 'Inter', sans-serif; /* Consistent font styling */
 }
 
 .header {
-    background: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #FFFFFF; /* Pure white header */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -23,7 +28,7 @@ body {
 .title {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #4285F4;
+    color: #000000; /* Uber's black text color */
 }
 
 .avatar {
@@ -34,8 +39,8 @@ body {
 
 /* Navigation Bar */
 .navbar {
-    background: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #FFFFFF; /* Matches header */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
     padding: 10px 0;
@@ -47,7 +52,7 @@ body {
 }
 
 .nav-link {
-    color: #333;
+    color: #333333; /* Neutral dark gray */
     font-weight: 500;
     padding: 8px 16px;
     text-decoration: none;
@@ -56,13 +61,13 @@ body {
 }
 
 .nav-link:hover {
-    background-color: #e3f2fd;
-    color: #4285F4;
+    background-color: #E2E2E2; /* Subtle gray hover background */
+    color: #000000; /* Strong black hover text */
 }
 
 .nav-link.active {
-    background-color: #4285F4;
-    color: white;
+    background-color: #000000; /* Uber's black */
+    color: #FFFFFF; /* White text on active */
 }
 
 /* Content Section */
@@ -78,15 +83,18 @@ body {
 
 /* Slider Section */
 .slider-container {
-    width: 100%;
-    max-width: 600px;
-    background: #ffffff;
+    width: 1000px; /* Fixed width */
+    height: 350px; /* Fixed height */
+    background: #FFFFFF; /* White container */
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: center;
     box-sizing: border-box;
+    margin: auto; /* Centers the container horizontally */
+    position: relative; /* Keeps it responsive for additional elements inside */
 }
+
 
 .slider-header {
     display: flex;
@@ -108,24 +116,24 @@ body {
 
 .slider-btn {
     margin: 0 5px;
-    background: #e0e0e0;
-    color: #333;
+    background: #F5F5F5; /* Light gray button background */
+    color: #333333; /* Dark gray text */
 }
 
 .slider-btn:hover {
-    background: #d1d1d1;
+    background: #E2E2E2; /* Slightly darker gray */
 }
 
 .slider-btn.active {
-    background: #4285F4;
-    color: white;
+    background: #000000; /* Uber's black */
+    color: #FFFFFF; /* White active text */
 }
 
 /* Input and Button Styles */
 #taskInput {
     font-size: 1rem;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #E2E2E2; /* Light border */
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
@@ -138,20 +146,23 @@ button {
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    background-color: #000000; /* Black button */
+    color: #FFFFFF; /* White text */
 }
 
 button:hover {
-    background-color: #357ae8;
-    color: white;
+    background-color: #333333; /* Slightly lighter black */
+    color: #FFFFFF;
 }
 
 /* Copy Field */
 .copy-field {
     display: flex;
     align-items: center;
-    border: 1px solid #ddd;
+    border: 1px solid #E2E2E2; /* Subtle gray border */
     border-radius: 4px;
     padding: 5px;
+    background: #FFFFFF; /* White background */
 }
 
 .copy-field span {
@@ -159,7 +170,7 @@ button:hover {
     font-size: 0.9rem;
     padding: 8px;
     border: none;
-    background: #f9f9f9;
+    background: #F5F5F5; /* Light gray for input field */
     outline: none;
 }
 
@@ -170,7 +181,7 @@ button:hover {
 
 /* Progress Bar */
 .progress {
-    background: #ddd;
+    background: #E2E2E2; /* Subtle gray background */
     border-radius: 4px;
     overflow: hidden;
     height: 20px;
@@ -179,8 +190,8 @@ button:hover {
 
 .progress-bar {
     width: 0;
-    background: #4285F4;
-    color: white;
+    background: #000000; /* Black progress bar */
+    color: #FFFFFF;
     text-align: center;
     line-height: 20px;
     font-size: 0.9rem;
@@ -190,7 +201,7 @@ button:hover {
 /* Error or Loading Message */
 .content p {
     font-size: 1rem;
-    color: #f44336;
+    color: #FF0000; /* Bright red for errors */
     text-align: center;
 }
 
@@ -215,26 +226,113 @@ button:hover {
     }
 }
 
-
-
+/* Form Container */
 .consensus-form {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 30px auto;
+    background: #FFFFFF; /* White card background */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.step {
+/* Form Header */
+.form-header {
+    text-align: center;
     margin-bottom: 20px;
 }
 
+.form-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    color: #202124; /* Dark gray */
+}
+
+.form-header p {
+    font-size: 0.9rem;
+    color: #5F6368; /* Subtle gray */
+}
+
+/* Step Title */
+.form-step-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #202124;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: #5F6368; /* Subtle gray */
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #DADCE0; /* Light gray border */
+    border-radius: 4px;
+    transition: border-color 0.2s;
+}
+
+/* Input Focus Styles */
+.form-control:focus {
+    border-color: #000000; /* Uber black */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Navigation Buttons */
 .navigation-buttons {
     display: flex;
     justify-content: space-between;
+    margin-top: 30px; /* Add spacing between the form fields and buttons */
 }
 
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    font-family: 'UberMove', sans-serif; /* Use Uber's custom font if available */
+}
+
+.btn-secondary {
+    background: #F6F6F6; /* Uber light gray */
+    color: #212121; /* Dark gray text */
+    border: 1px solid #DADCE0; /* Subtle border for light gray buttons */
+}
+
+.btn-secondary:hover {
+    background: #E8E8E8; /* Slightly darker gray for hover */
+    color: #000000; /* Black text */
+}
+
+.btn-primary {
+    background: #000000; /* Uber black */
+    color: #FFFFFF; /* White text */
+}
+
+.btn-primary:hover {
+    background: #333333; /* Slightly lighter black */
+    color: #FFFFFF;
+}
+
+/* Button Focus Effects */
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2); /* Subtle black focus ring */
+}
+
+
+/* Modal */
 .modal {
     position: fixed;
     top: 0;
@@ -252,12 +350,13 @@ button:hover {
 }
 
 .modal-content {
-    background: #ffffff;
+    background: #FFFFFF;
     padding: 20px;
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
     text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .modal-actions {
@@ -266,35 +365,28 @@ button:hover {
     justify-content: space-between;
 }
 
+#fetchTaskButton {
+    margin-top: 50px; /* Adds spacing between the input and button */
+}
 
-.task-card {
-    border: 1px solid #ddd;
+.tasks-container {
+    padding: 20px;
+    background: #f9f9f9;
     border-radius: 8px;
-    background: #fff;
-    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#searchTasksInput {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
     margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.task-card .task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.task-card .task-details {
-    display: none;
-    margin-top: 10px;
-}
-
-.task-card .task-details.visible {
-    display: block;
-}
-
-.error-log {
-    color: red;
-}
-
-.action-buttons .btn {
-    margin-right: 10px;
+.table {
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

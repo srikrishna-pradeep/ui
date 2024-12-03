@@ -1,22 +1,26 @@
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Task Monitoring Dashboard</h1>
-    <!-- Task Cards Section -->
-    <div id="tasksSection" class="row">
-        <!-- Dynamic task cards will be inserted here -->
-    </div>
-    <!-- Error Logs Section -->
-    <div class="mt-5">
-        <h2>Error Logs</h2>
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Task ID</th>
-                    <th>Error Message</th>
-                </tr>
-            </thead>
-            <tbody id="errorLogsSection">
-                <!-- Dynamic error logs will be inserted here -->
-            </tbody>
-        </table>
-    </div>
+<div class="tasks-container">
+    <h2 class="mb-4">Consensus Report Tasks</h2>
+    <input
+        type="text"
+        id="searchTasksInput"
+        class="form-control mb-3"
+        placeholder="Search tasks by User, Language, or URL"
+    />
+    <table id="tasksTable" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Run Date</th>
+                <th>User</th>
+                <th>Language</th>
+                <th>Input Raw URL</th>
+                <th>Is Golden Answer</th>
+                <th>Status</th>
+                <th>Final URL</th>
+                <th>More Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be dynamically populated by JavaScript -->
+        </tbody>
+    </table>
 </div>

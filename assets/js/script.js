@@ -1,3 +1,5 @@
+const tasksArray = []; // To store all tasks for later use
+
 document.addEventListener('DOMContentLoaded', () => {
     const contentArea = document.getElementById('content');
     const sliderContent = document.getElementById('sliderContent');
@@ -73,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
             slideFile = 'pages/sub-pages/slide1.html';
         } else if (slide === 'slide2') {
             slideFile = 'pages/sub-pages/slide2.html';
+        } else if (slide === 'slide3') {
+            slideFile = 'pages/sub-pages/slide3.html';
         }
     
         if (slideFile) {
@@ -87,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }    
     
-
     /**
      * Progress bar functionality for Slide 1
      */
@@ -125,8 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     let currentStep = 1;
+    const storedEntries = new Map(); // To prevent duplicate entries
+    
 
-    // Proceed to next step
+
+    // Handle Next Step
     window.handleNext = function () {
         if (!validateStep(currentStep)) {
             alert("Please complete the current step before proceeding.");
@@ -142,10 +148,14 @@ document.addEventListener('DOMContentLoaded', () => {
             currentStep++;
         }
 
+        if (currentStep === 2) getTemplateTypes();
+
+        if (currentStep === 7) generateModelFields();
+
         toggleButtons();
     };
 
-    // Go back to previous step
+    // Go back to the previous step
     window.handlePrev = function () {
         const currentStepElement = document.getElementById(`step${currentStep}`);
         const prevStepElement = document.getElementById(`step${currentStep - 1}`);
@@ -156,70 +166,228 @@ document.addEventListener('DOMContentLoaded', () => {
             currentStep--;
         }
 
+        // Fetch template types dynamically at Step 2
+        if (currentStep === 2) getTemplateTypes();
+
+        // Generate dynamic model fields at Step 8
+        if (currentStep === 8) generateModelFields();
+
+        // Show additional information only for Translation Evals at Step 9
+        if (currentStep === 9) showAdditionalInfo();
+
         toggleButtons();
     };
 
-    // Validate current step
+    
+    // Validate Current Step
     function validateStep(step) {
         switch (step) {
-            case 1: // Validate Question Type
+            case 1:
                 return document.getElementById("questionType").value !== "";
-            case 2: // Validate Template Type
+            case 2:
                 return document.getElementById("templateType").value !== "";
-            case 3: // Validate URL
-                const urlInput = document.getElementById("urlInput").value;
-                return urlInput.match(/https?:\/\/[^\s]+/);
-            case 4: // Validate Replication Count
-                const replicationCount = document.getElementById("replicationCount").value;
-                return replicationCount > 0;
-            case 5: // Validate Number of Models
-                const numberOfModels = document.getElementById("numberOfModels").value;
-                return numberOfModels > 0;
+            case 3:
+                const url = document.getElementById("urlInput").value;
+                return url.match(/https?:\/\/[^\s]+/);
+            case 4:
+                return document.getElementById("replicationCount").value > 0;
+            case 5:
+                const customLang = document.getElementById("customLanguageCode");
+                if (document.querySelector('input[name="languageCode"]:checked').value === "other") {
+                    return customLang.value.trim() !== "";
+                }
+                return true;
+            case 6:
+                return !!document.querySelector('input[name="matchingColumn"]:checked');
+            case 7:
+                return document.getElementById("numberOfModels").value > 0;
+            case 9:
+                const questionType = document.getElementById("questionType").value;
+                if (questionType === "Translation Evals") {
+                    return document.getElementById("additionalInfo").value.trim() !== "";
+                }
+                return true;
             default:
-                return false;
+                return true;
         }
     }
 
-    // Toggle Next/Previous button states
+    // Map of Question Types to Template Types
+    const templateOptions = new Map([
+        ["Cloud Evals", ["CE Type 1", "CE Type 2", "CE Type 3", "CE Type 4", "CE Type 5"]],
+        ["Quality Evals", ["QA Type 1", "QA Type 2", "QA Type 3"]],
+        ["Human Evals", ["HE Type 1"]],
+        ["Cloud AI Harm Evals", ["CAHE Type 1"]],
+        ["Safety Evals", ["SE Type 1", "SE Type 2"]],
+        ["Translation Evals", ["TE Type 1"]],
+        ["Cultural Evals", ["CUE Type 1"]],
+    ]);
+
+    // Handle Question Type change
+    function getTemplateTypes() {
+        const selectedQuestionType = document.getElementById("questionType").value;
+        const templateTypeDropdown = document.getElementById("templateType");
+
+        // Clear existing options
+        templateTypeDropdown.innerHTML = '<option value="" disabled selected>Select a template...</option>';
+
+        // Populate new options if valid Question Type is selected
+        if (templateOptions.has(selectedQuestionType)) {
+            const templates = templateOptions.get(selectedQuestionType);
+            templates.forEach(template => {
+                const option = document.createElement("option");
+                option.value = template;
+                option.textContent = template;
+                templateTypeDropdown.appendChild(option);
+            });
+        }
+    };
+
+    // Generate model fields dynamically at Step 8
+    function generateModelFields() {
+        handleNext()
+        const numberOfModels = document.getElementById("numberOfModels").value;
+        const modelsWrapper = document.getElementById("modelsWrapper");
+        modelsWrapper.innerHTML = ""; // Clear existing fields
+
+        console.log("Number of Models " + numberOfModels);
+        for (let i = 1; i <= numberOfModels; i++) {
+            const modelFieldSet = `
+                <div class="form-group">
+                    <label>Model ${i} Column Name</label>
+                    <input type="text" class="form-control" id="model${i}ColumnName" placeholder="Enter column name">
+                    <label>Model ${i} Name</label>
+                    <input type="text" class="form-control" id="model${i}Name" placeholder="Enter model name">
+                </div>
+            `;
+            modelsWrapper.insertAdjacentHTML("beforeend", modelFieldSet);
+        }
+    }
+
+    // Show additional info only for Translation Evals
+    function showAdditionalInfo() {
+        const questionType = document.getElementById("questionType").value;
+        const additionalInfoStep = document.getElementById("step9");
+
+        if (questionType === "Translation Evals") {
+            additionalInfoStep.classList.remove("d-none");
+        }
+    }
+
+    // Add event listeners to language code radio buttons
+    document.querySelectorAll('input[name="languageCode"]').forEach(radio => {
+        radio.addEventListener("change", function () {
+            const customLanguageCodeInput = document.getElementById("customLanguageCode");
+
+            // Show or hide the customLanguageCode input based on the selected radio button
+            console.log(this.value);
+            if (this.value === "other") {
+                customLanguageCodeInput.classList.remove("d-none");
+            } else {
+                customLanguageCodeInput.classList.add("d-none");
+                customLanguageCodeInput.value = ""; // Clear the input value when hidden
+            }
+        });
+    });
+
+
+    // Toggle buttons (Next/Previous)
     function toggleButtons() {
         document.getElementById("prevButton").disabled = currentStep === 1;
         const nextButton = document.getElementById("nextButton");
 
-        if (document.getElementById(`step${currentStep + 1}`)) {
-            nextButton.textContent = "Next";
-        } else {
+        if(currentStep === 7){
+            nextButton.textContent = "Generate Field";
+            nextButton.onclick = generateModelFields;
+        }else if (currentStep === 9) {
             nextButton.textContent = "Review";
             nextButton.onclick = showSummary;
+        } else {
+            nextButton.textContent = "Next";
+            nextButton.onclick = handleNext;
         }
     }
 
-    // Show summary modal
+
+    // Show Summary Modal
     window.showSummary = function () {
         const summaryContent = document.getElementById("summaryContent");
+
+        let modelsSummary = "";
+        const numberOfModels = document.getElementById("numberOfModels").value;
+        for (let i = 1; i <= numberOfModels; i++) {
+            const columnName = document.getElementById(`model${i}ColumnName`).value;
+            const modelName = document.getElementById(`model${i}Name`).value;
+            modelsSummary += `<p>Model ${i}: ${columnName} - ${modelName}</p>`;
+        }
+
         summaryContent.innerHTML = `
             <p><strong>Question Type:</strong> ${document.getElementById("questionType").value}</p>
             <p><strong>Template Type:</strong> ${document.getElementById("templateType").value}</p>
-            <p><strong>URL:</strong> ${document.getElementById("urlInput").value}</p>
+            <p><strong>Google Sheet URL:</strong> ${document.getElementById("urlInput").value}</p>
             <p><strong>Replication Count:</strong> ${document.getElementById("replicationCount").value}</p>
-            <p><strong>Number of Models:</strong> ${document.getElementById("numberOfModels").value}</p>
+            <p><strong>Language Code:</strong> ${document.querySelector('input[name="languageCode"]:checked').value}</p>
+            <p><strong>Matching Column:</strong> ${document.querySelector('input[name="matchingColumn"]:checked').value}</p>
+            <p><strong>Number of Models:</strong> ${numberOfModels}</p>
+            ${modelsSummary}
+            <p><strong>Additional Info:</strong> ${document.getElementById("additionalInfo").value}</p>
         `;
 
         document.getElementById("summaryModal").classList.add("show");
     };
 
-    // Close summary modal
-    window.closeModal = function () {
-        document.getElementById("summaryModal").classList.remove("show");
-    };
 
-    // Submit the form
+    // Extract Google Sheet ID from URL
+    function extractGoogleSheetId(url) {
+        const regex = /https:\/\/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/;
+        const match = url.match(regex);
+        return match ? match[1] : null; // Return the ID if matched, otherwise null
+    }
+
+    // Submit Form
     window.submitForm = function () {
+        const url = document.getElementById("urlInput").value;
+        const sheetId = extractGoogleSheetId(url);
+
+        if (!sheetId) {
+            alert("Invalid Google Sheet URL. Please provide a valid URL.");
+            return;
+        }
+
+        if (storedEntries.has(sheetId)) {
+            alert("Duplicate entry. This sheet ID is already submitted.");
+            return;
+        }
+
+        // Create the task object
+        const task = {
+            sheetId,
+            questionType: document.getElementById("questionType").value,
+            templateType: document.getElementById("templateType").value,
+            languageCode: document.querySelector('input[name="languageCode"]:checked').value,
+            matchingColumn: document.querySelector('input[name="matchingColumn"]:checked').value,
+            additionalInfo: document.getElementById("additionalInfo").value,
+            url, // Keep the full URL for reference
+        };
+
+        // Store task in the Map (to prevent duplicates)
+        storedEntries.set(sheetId, task);
+
+        // Add the task to the tasks array
+        tasksArray.push(task);
+
         alert("Form submitted successfully!");
+        console.log("Tasks Array:", tasksArray); // Debugging output to verify the tasks array
         closeModal();
         resetForm();
     };
 
-    // Reset form and start over
+    // Close the modal
+    window.closeModal = function () {
+        document.getElementById("summaryModal").classList.remove("show");
+    };
+
+    // Reset Form
     function resetForm() {
         document.getElementById("consensusForm").reset();
         currentStep = 1;
@@ -229,137 +397,94 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleButtons();
     }
 
-
-
-
-    const tasksSection = document.getElementById('tasksSection');
-    const errorLogsSection = document.getElementById('errorLogsSection');
-
-    // Mock data for tasks
-    const tasks = [
+    const tasksArray = [
         {
-            id: 'task1',
-            status: 'Running',
-            config: {
-                questionType: 'Type A',
-                templateType: 'Template 1',
-                url: 'https://sheet.example.com/abc',
-                replicationCount: 10,
-                models: [
-                    { columnName: 'col1', modelName: 'model1' },
-                    { columnName: 'col2', modelName: 'model2' }
-                ]
-            },
-            logs: [
-                'Task started at 10:00 AM',
-                'Data fetched at 10:05 AM'
+            runDate: new Date().toLocaleDateString(),
+            user: "Pradeep",
+            language: "English",
+            inputRawUrl: "https://docs.google.com/spreadsheets/d/1abc12345/edit",
+            questionType: "Quality Evals",
+            isGoldenAnswer: false,
+            status: [
+                { result: "Success", startTime: "10:00 AM", endTime: "10:30 AM", duration: "30 mins" },
+                { result: "Failure", startTime: "9:00 AM", endTime: "9:15 AM", duration: "15 mins" },
+                { result: "Running", startTime: "11:00 AM", endTime: "", duration: "" }
             ],
-            error: null
+            finalUrl: "https://docs.google.com/spreadsheets/d/1abc12345/edit"
         },
-        {
-            id: 'task2',
-            status: 'Completed',
-            config: {
-                questionType: 'Type B',
-                templateType: 'Template 2',
-                url: 'https://sheet.example.com/def',
-                replicationCount: 5,
-                models: [
-                    { columnName: 'colA', modelName: 'modelA' }
-                ]
-            },
-            logs: [
-                'Task started at 11:00 AM',
-                'Data fetched at 11:05 AM',
-                'Task completed at 11:10 AM'
-            ],
-            error: null
-        },
-        {
-            id: 'task3',
-            status: 'Failed',
-            config: {
-                questionType: 'Type C',
-                templateType: 'Template 3',
-                url: 'https://sheet.example.com/xyz',
-                replicationCount: 3,
-                models: []
-            },
-            logs: [
-                'Task started at 12:00 PM',
-                'Error encountered during processing'
-            ],
-            error: 'Data processing failed due to invalid configuration.'
-        }
+        // Add more task objects as needed
     ];
 
-    // Render tasks dynamically
-    function renderTasks() {
-        tasksSection.innerHTML = '';
-        tasks.forEach(task => {
-            const card = document.createElement('div');
-            card.className = 'col-md-6 task-card';
-            card.innerHTML = `
-                <div class="task-header">
-                    <div>
-                        <strong>Task ID:</strong> ${task.id}<br>
-                        <strong>Status:</strong> ${task.status}
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn btn-info btn-sm view-details" data-task="${task.id}">View Details</button>
-                        ${task.status === 'Completed' ? `<button class="btn btn-success btn-sm">Download Results</button>` : ''}
-                    </div>
-                </div>
-                <div class="task-details" id="details-${task.id}">
-                    <h5>Logs</h5>
-                    <ul>
-                        ${task.logs.map(log => `<li>${log}</li>`).join('')}
-                    </ul>
-                    <h5>Configuration</h5>
-                    <ul>
-                        <li><strong>Question Type:</strong> ${task.config.questionType}</li>
-                        <li><strong>Template Type:</strong> ${task.config.templateType}</li>
-                        <li><strong>URL:</strong> ${task.config.url}</li>
-                        <li><strong>Replication Count:</strong> ${task.config.replicationCount}</li>
-                        <li><strong>Models:</strong>
-                            <ul>
-                                ${task.config.models.map(model => `<li>${model.columnName} - ${model.modelName}</li>`).join('')}
+    const tableBody = document.querySelector("#tasksTable tbody");
+    const searchInput = document.getElementById("searchTasksInput");
+
+    function populateTable(tasks) {
+        tableBody.innerHTML = ""; // Clear existing rows
+        tasks.forEach((task, index) => {
+            const statusHover = task.status.map(s =>
+                `<div><strong>${s.result}:</strong> Start: ${s.startTime}, End: ${s.endTime || 'N/A'}, Duration: ${s.duration || 'N/A'}</div>`
+            ).join("");
+
+            const row = `
+                <tr>
+                    <td>${task.runDate}</td>
+                    <td>${task.user}</td>
+                    <td>${task.language}</td>
+                    <td>
+                        <span class="badge bg-primary">${task.questionType}</span>
+                        <br>
+                        <a href="${task.inputRawUrl}" target="_blank">View Sheet</a>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input golden-answer-toggle" type="checkbox" ${task.isGoldenAnswer ? "checked" : ""} data-index="${index}">
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-label">${task.status[0].result}</span>
+                        <div class="status-hover">${statusHover}</div>
+                    </td>
+                    <td><a href="${task.finalUrl}" target="_blank">Final URL</a></td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                More Options
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                <li><a class="dropdown-item" href="#">View</a></li>
+                                <li><a class="dropdown-item" href="#">Re-Run</a></li>
+                                <li><a class="dropdown-item" href="#">Delete</a></li>
                             </ul>
-                        </li>
-                    </ul>
-                    ${task.error ? `<h5 class="error-log">Error</h5><p>${task.error}</p>` : ''}
-                </div>
+                        </div>
+                    </td>
+                </tr>
             `;
-            tasksSection.appendChild(card);
+            tableBody.insertAdjacentHTML("beforeend", row);
         });
     }
 
-    // Render error logs dynamically
-    function renderErrorLogs() {
-        errorLogsSection.innerHTML = '';
-        tasks
-            .filter(task => task.error)
-            .forEach(task => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${task.id}</td>
-                    <td>${task.error}</td>
-                `;
-                errorLogsSection.appendChild(row);
-            });
-    }
+    // Initial table population
+    populateTable(tasksArray);
 
-    // Handle view details toggle
-    tasksSection.addEventListener('click', (e) => {
-        if (e.target.classList.contains('view-details')) {
-            const taskId = e.target.getAttribute('data-task');
-            const details = document.getElementById(`details-${taskId}`);
-            details.classList.toggle('visible');
-        }
+    // Search functionality
+    searchInput.addEventListener("input", function () {
+        const searchTerm = this.value.toLowerCase();
+        const filteredTasks = tasksArray.filter(task =>
+            task.user.toLowerCase().includes(searchTerm) ||
+            task.language.toLowerCase().includes(searchTerm) ||
+            task.inputRawUrl.toLowerCase().includes(searchTerm)
+        );
+        populateTable(filteredTasks);
     });
 
-    // Initial rendering
-    renderTasks();
-    renderErrorLogs();
+    // Handle Golden Answer Toggle
+    document.addEventListener("change", function (e) {
+        if (e.target.classList.contains("golden-answer-toggle")) {
+            const taskIndex = e.target.dataset.index;
+            tasksArray[taskIndex].isGoldenAnswer = e.target.checked;
+            alert(`Golden Answer for task ${taskIndex + 1} is now ${e.target.checked ? "enabled" : "disabled"}`);
+        }
+    });
 });
 

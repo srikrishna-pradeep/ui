@@ -1,83 +1,114 @@
-<div class="consensus-form">
-    <form id="consensusForm" novalidate>
-        <!-- Steps Wrapper -->
-        <div id="stepsWrapper">
-            <!-- Step 1: Question Type -->
-            <div class="step" id="step1">
-                <h4>Step 1: Select Question Type</h4>
-                <div class="form-group">
-                    <label for="questionType">Select Question Type</label>
-                    <select id="questionType" class="form-control">
-                        <option value="" disabled selected>Select a type...</option>
-                        <option value="cloudEvals">Cloud Evals</option>
-                        <option value="qualityEvals">Quality Evals</option>
-                        <option value="humanEvals">Human Evals</option>
-                        <option value="cloudAIEvals">Cloud AI Harm Evals</option>
-                        <option value="safetyEvals">Safety Evals</option>
-                        <option value="translationEvals">Translation Evals</option>
-                        <option value="culturalEvals">Cultural Evals</option>
-                    </select>
-                </div>
-            </div>
 
-            <!-- Step 2: Template Type -->
-            <div class="step d-none" id="step2">
-                <h4>Step 2: Select Template Type</h4>
-                <div class="form-group">
-                    <label for="templateType">Select Template Type</label>
-                    <select id="templateType" class="form-control">
-                        <option value="" disabled selected>Select a template...</option>
-                        <option value="typeA">Type A</option>
-                        <option value="typeB">Type B</option>
-                        <option value="typeC">Type C</option>
-                    </select>
-                </div>
-            </div>
+<form id="consensusForm" novalidate>
+    <!-- Form Header -->
+    <div class="form-header">
+        <h3>Generate Consensus Report</h2>
+    </div>
 
-            <!-- Step 3: URL -->
-            <div class="step d-none" id="step3">
-                <h4>Step 3: Enter URL</h4>
-                <div class="form-group">
-                    <label for="urlInput">Enter URL</label>
-                    <input type="url" id="urlInput" class="form-control" placeholder="Enter the relevant Google Sheet URL">
-                </div>
-            </div>
+    <!-- Steps Wrapper -->
+    <div id="stepsWrapper">
+        <!-- Step 1: Question Type -->
+        <div class="step" id="step1">
+            <label>Select Question Type</label>
+            <select id="questionType" class="form-control">
+                <option value="" disabled selected>Select a type...</option>
+                <option value="Cloud Evals">Cloud Evals</option>
+                <option value="Quality Evals">Quality Evals</option>
+                <option value="Human Evals">Human Evals</option>
+                <option value="Cloud AI Harm Evals">Cloud AI Harm Evals</option>
+                <option value="Safety Evals">Safety Evals</option>
+                <option value="Translation Evals">Translation Evals</option>
+                <option value="Cultural Evals">Cultural Evals</option>
+            </select>
+        </div>
 
-            <!-- Step 4: Replication Count -->
-            <div class="step d-none" id="step4">
-                <h4>Step 4: Enter Replication Count</h4>
-                <div class="form-group">
-                    <label for="replicationCount">Enter Replication Count</label>
-                    <input type="number" id="replicationCount" class="form-control" min="1" placeholder="Enter replication count">
-                </div>
-            </div>
+        <!-- Step 2: Template Type -->
+        <div class="step d-none" id="step2">
+            <label>Select Template Type</label>
+            <select id="templateType" class="form-control">
+                <option value="" disabled selected>Select a template...</option>
+                <option value="Type 1">Type 1</option>
+                <option value="Type 2">Type 2</option>
+                <option value="Type 3">Type 3</option>
+            </select>
+        </div>
 
-            <!-- Step 5: Number of Models -->
-            <div class="step d-none" id="step5">
-                <h4>Step 5: Enter Number of Models</h4>
-                <div class="form-group">
-                    <label for="numberOfModels">Enter Number of Models</label>
-                    <input type="number" id="numberOfModels" class="form-control" min="1" placeholder="Enter number of models">
-                </div>
+        <!-- Step 3: Google Sheet URL -->
+        <div class="step d-none" id="step3">
+            <label>Google Sheet URL</label>
+            <input type="url" id="urlInput" class="form-control" placeholder="Enter the relevant Google Sheet URL">
+        </div>
+
+        <!-- Step 4: Replication Count -->
+        <div class="step d-none" id="step4">
+            <label>Replication Count</label>
+            <input type="number" id="replicationCount" class="form-control" min="1" placeholder="Enter replication count">
+        </div>
+
+        <!-- Step 5: Language Code -->
+        <div class="step d-none" id="step5">
+            <label>What is the Language Code</label>
+            <div class="form-group">
+                <label>
+                    <input type="radio" name="languageCode" value="all" checked> All
+                </label>
+                <label>
+                    <input type="radio" name="languageCode" value="other"> Other
+                    <input type="text" id="customLanguageCode" class="form-control d-none" placeholder="Enter language code">
+                </label>
             </div>
         </div>
 
-        <!-- Navigation Buttons -->
-        <div class="navigation-buttons">
-            <button type="button" class="btn btn-secondary" id="prevButton" onclick="handlePrev()" disabled>Previous</button>
-            <button type="button" class="btn btn-primary" id="nextButton" onclick="handleNext()">Next</button>
-        </div>
-    </form>
-
-    <!-- Summary Modal -->
-    <div id="summaryModal" class="modal">
-        <div class="modal-content">
-            <h4>Summary</h4>
-            <div id="summaryContent"></div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeModal()">Back</button>
-                <button class="btn btn-primary" onclick="submitForm()">Submit</button>
+        <!-- Step 6: Matching Column -->
+        <div class="step d-none" id="step6">
+            <label>Does the dataset have a Matching Column?</label>
+            <div class="form-group">
+                <label>
+                    <input type="radio" name="matchingColumn" value="yes"> Yes
+                </label>
+                <label>
+                    <input type="radio" name="matchingColumn" value="no"> No
+                </label>
             </div>
+        </div>
+
+        <!-- Step 7: Number of Models -->
+        <div class="step d-none" id="step7">
+            <label>Number of Models</label>
+            <input type="number" id="numberOfModels" class="form-control" min="1" placeholder="Enter number of models">
+        </div>
+
+        <!-- Step 8: Model Details -->
+        <div class="step d-none" id="step8">
+            <label>Model Details</label>
+            <div id="modelsWrapper" class="mt-3">
+                <!-- Dynamic model fields will be added here -->
+            </div>
+        </div>
+
+        <!-- Step 9: Additional Information -->
+        <div class="step d-none" id="step9">
+            <label>Additional Information</label>
+            <textarea id="additionalInfo" class="form-control" rows="3" placeholder="Enter additional information"></textarea>
+        </div>
+
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+        <button type="button" class="btn btn-secondary" id="prevButton" onclick="handlePrev()" disabled>Previous</button>
+        <button type="button" class="btn btn-primary" id="nextButton" onclick="handleNext()">Next</button>
+    </div>
+</form>
+
+<!-- Summary Modal -->
+<div id="summaryModal" class="modal">
+    <div class="modal-content">
+        <h4>Summary</h4>
+        <div id="summaryContent"></div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeModal()">Back</button>
+            <button class="btn btn-primary" onclick="submitForm()">Submit</button>
         </div>
     </div>
 </div>
