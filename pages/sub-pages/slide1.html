@@ -1,0 +1,15 @@
+<div>
+    <h2 class="mb-4">Generate Raw Results</h2>
+    <input type="text" id="taskInput" placeholder="Enter ID" class="form-control mb-3" aria-label="Task ID">
+    <button class="btn btn-primary w-100 mb-3" onclick="startProgress()">Submit</button>
+    <div class="status d-none" id="statusSection">
+        <p id="statusText">Processing...</p>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="progressBar"></div>
+        </div>
+    </div>
+    <div class="copy-field mt-3 d-flex align-items-center">
+        <span class="form-control me-2" id="generatedLink">Generated Link</span>
+        <img src="https://cdn-icons-png.flaticon.com/512/126/126486.png" alt="Copy Icon" class="copy-icon" title="Copy to Clipboard" onclick="copyToClipboard()">
+    </div>
+</div>

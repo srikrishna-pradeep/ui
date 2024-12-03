@@ -1,0 +1,83 @@
+<div class="consensus-form">
+    <form id="consensusForm" novalidate>
+        <!-- Steps Wrapper -->
+        <div id="stepsWrapper">
+            <!-- Step 1: Question Type -->
+            <div class="step" id="step1">
+                <h4>Step 1: Select Question Type</h4>
+                <div class="form-group">
+                    <label for="questionType">Select Question Type</label>
+                    <select id="questionType" class="form-control">
+                        <option value="" disabled selected>Select a type...</option>
+                        <option value="cloudEvals">Cloud Evals</option>
+                        <option value="qualityEvals">Quality Evals</option>
+                        <option value="humanEvals">Human Evals</option>
+                        <option value="cloudAIEvals">Cloud AI Harm Evals</option>
+                        <option value="safetyEvals">Safety Evals</option>
+                        <option value="translationEvals">Translation Evals</option>
+                        <option value="culturalEvals">Cultural Evals</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Step 2: Template Type -->
+            <div class="step d-none" id="step2">
+                <h4>Step 2: Select Template Type</h4>
+                <div class="form-group">
+                    <label for="templateType">Select Template Type</label>
+                    <select id="templateType" class="form-control">
+                        <option value="" disabled selected>Select a template...</option>
+                        <option value="typeA">Type A</option>
+                        <option value="typeB">Type B</option>
+                        <option value="typeC">Type C</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Step 3: URL -->
+            <div class="step d-none" id="step3">
+                <h4>Step 3: Enter URL</h4>
+                <div class="form-group">
+                    <label for="urlInput">Enter URL</label>
+                    <input type="url" id="urlInput" class="form-control" placeholder="Enter the relevant Google Sheet URL">
+                </div>
+            </div>
+
+            <!-- Step 4: Replication Count -->
+            <div class="step d-none" id="step4">
+                <h4>Step 4: Enter Replication Count</h4>
+                <div class="form-group">
+                    <label for="replicationCount">Enter Replication Count</label>
+                    <input type="number" id="replicationCount" class="form-control" min="1" placeholder="Enter replication count">
+                </div>
+            </div>
+
+            <!-- Step 5: Number of Models -->
+            <div class="step d-none" id="step5">
+                <h4>Step 5: Enter Number of Models</h4>
+                <div class="form-group">
+                    <label for="numberOfModels">Enter Number of Models</label>
+                    <input type="number" id="numberOfModels" class="form-control" min="1" placeholder="Enter number of models">
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <button type="button" class="btn btn-secondary" id="prevButton" onclick="handlePrev()" disabled>Previous</button>
+            <button type="button" class="btn btn-primary" id="nextButton" onclick="handleNext()">Next</button>
+        </div>
+    </form>
+
+    <!-- Summary Modal -->
+    <div id="summaryModal" class="modal">
+        <div class="modal-content">
+            <h4>Summary</h4>
+            <div id="summaryContent"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Back</button>
+                <button class="btn btn-primary" onclick="submitForm()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
