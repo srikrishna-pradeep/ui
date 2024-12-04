@@ -1,4 +1,5 @@
 <div class="tasks-container">
+    <div id="notificationContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
     <h2 class="mb-4">Consensus Report Tasks</h2>
     <input
         type="text"
@@ -12,15 +13,53 @@
                 <th>Run Date</th>
                 <th>User</th>
                 <th>Language</th>
-                <th>Input Raw URL</th>
-                <th>Is Golden Answer</th>
+                <th>Input URL</th>
+                <th>Is GA</th>
                 <th>Status</th>
                 <th>Final URL</th>
-                <th>More Options</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Rows will be dynamically populated by JavaScript -->
+            <!-- Static Records -->
+            <tr>
+                <td>2024-12-02</td>
+                <td>Pradeep</td>
+                <td>All</td>
+                <td>
+                    <span class="badge bg-dark">Cloud Evals</span>
+                    <br>
+                    <a href="https://docs.google.com/spreadsheets/d/1abc12345/edit" target="_blank">Sheet URL</a>
+                </td>
+                <td>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox">
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex gap-1 position-relative">
+                        <div class="status-box bg-warning position-relative" data-bs-toggle="tooltip" title="Start: 2024-12-02 11:00 AM, End: N/A, Duration: N/A"></div>
+                        <div class="status-box bg-danger position-relative" data-bs-toggle="tooltip" title="Start: 2024-12-02 09:00 AM, End: 2024-12-02 09:11 AM, Duration: 1min 5sec"></div>
+                        <div class="status-box bg-success position-relative" data-bs-toggle="tooltip" title="Start: 2024-12-02 10:00 AM, End: 2024-12-02 10:00 AM, Duration: 18s"></div>
+                    </div>
+                </td>
+                <td>
+                    <a href="https://docs.google.com/spreadsheets/d/1abc12345/edit" target="_blank">Final URL</a>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Edit</a></li>
+                            <li><a class="dropdown-item" href="#">View</a></li>
+                            <li><a class="dropdown-item" href="#">Re-Run</a></li>
+                            <li><a class="dropdown-item" href="#">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>

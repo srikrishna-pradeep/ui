@@ -3,7 +3,7 @@ body {
     font-family: 'UberMove', 'Inter', sans-serif; /* Use UberMove font if available, fallback to Inter */
     margin: 0;
     padding: 0;
-    background: #F5F5F5; /* Uber's light gray background */
+    background: #696666; /* Uber's light gray background */
     color: #222222; /* Dark gray text for better contrast */
 }
 
@@ -84,7 +84,7 @@ h1, h2, h3, h4, h5, h6, label, input, textarea, button {
 /* Slider Section */
 .slider-container {
     width: 1000px; /* Fixed width */
-    height: 350px; /* Fixed height */
+    height: 100%; /* Fixed height */
     background: #FFFFFF; /* White container */
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -201,7 +201,7 @@ button:hover {
 /* Error or Loading Message */
 .content p {
     font-size: 1rem;
-    color: #FF0000; /* Bright red for errors */
+    color: #000000; /* Bright red for errors */
     text-align: center;
 }
 
@@ -374,6 +374,8 @@ button:hover {
     background: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 1000px; /* Fixed width */
+    height: 1000px; /* Fixed height */
 }
 
 #searchTasksInput {
@@ -389,4 +391,44 @@ button:hover {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: visible;
+}
+
+.status-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+}
+
+.status-box[data-bs-toggle="tooltip"]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 10;
+    width: max-content;
+}
+
+.status-box[data-bs-toggle="tooltip"]:hover::before {
+    content: "";
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.8);
+    z-index: 10;
+}
+
+.position-relative {
+    overflow: visible;
 }

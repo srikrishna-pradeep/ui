@@ -91,13 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }    
     
-    /**
-     * Progress bar functionality for Slide 1
-     */
+    // Function to start the progress bar and set the generated link
     window.startProgress = function () {
         const statusSection = document.getElementById('statusSection');
         const progressBar = document.getElementById('progressBar');
+        const taskInput = document.getElementById('taskInput'); // Fix reference to taskInput
+        const id = taskInput.value.trim();
         const statusText = document.getElementById('statusText');
+        const generatedLink = document.getElementById('generatedLink');
         let progress = 0;
 
         statusSection.classList.remove('d-none');
@@ -111,21 +112,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(interval);
                 progressBar.textContent = '100%';
                 statusText.textContent = 'Completed!';
+                // Set the generated link to a Google Sheet URL
+                generatedLink.textContent = `https://docs.google.com/spreadsheets/d/${id}`;
+                showNotification('Success', 'Google Sheet link has been generated successfully!', 'success');
             }
         }, 300);
     };
 
-    /**
-     * Copy to clipboard functionality for Slide 1
-     */
+    // Function to copy the generated link to clipboard
     window.copyToClipboard = function () {
         const text = document.getElementById('generatedLink').textContent;
+        if (text === '' || text === 'Generated Link') {
+            showNotification('Error', 'No link to copy. Please generate a link first.', 'danger');
+            return;
+        }
         navigator.clipboard.writeText(text).then(() => {
-            alert('Copied to clipboard!');
+            showNotification('Success', 'Link copied to clipboard successfully!', 'success');
         }).catch(() => {
-            alert('Failed to copy!');
+            showNotification('Error', 'Failed to copy the link.', 'danger');
         });
     };
+
+    // Function to show notifications
+    function showNotification(title, message, type) {
+        const notificationContainer = document.getElementById('notificationContainer');
+
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show`;
+        notification.role = 'alert';
+        notification.innerHTML = `
+            <strong>${title}</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+
+        notificationContainer.appendChild(notification);
+
+        // Auto dismiss notification after 5 seconds
+        setTimeout(() => {
+            if (notificationContainer.contains(notification)) {
+                notificationContainer.removeChild(notification);
+            }
+        }, 3000);
+    }
+
+    
+    
     
     let currentStep = 1;
     const storedEntries = new Map(); // To prevent duplicate entries
@@ -396,95 +427,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         toggleButtons();
     }
-
-    // This is for tasks.html
-    const tasksArray = [
-        {
-            runDate: new Date().toLocaleDateString(),
-            user: "Pradeep",
-            language: "English",
-            inputRawUrl: "https://docs.google.com/spreadsheets/d/1abc12345/edit",
-            questionType: "Quality Evals",
-            isGoldenAnswer: false,
-            status: [
-                { result: "Success", startTime: "10:00 AM", endTime: "10:30 AM", duration: "30 mins" },
-                { result: "Failure", startTime: "9:00 AM", endTime: "9:15 AM", duration: "15 mins" },
-                { result: "Running", startTime: "11:00 AM", endTime: "", duration: "" }
-            ],
-            finalUrl: "https://docs.google.com/spreadsheets/d/1abc12345/edit"
-        },
-        // Add more task objects as needed
-    ];
-
-    const tableBody = document.querySelector("#tasksTable tbody");
-    const searchInput = document.getElementById("searchTasksInput");
-
-    function populateTable(tasks) {
-        tableBody.innerHTML = ""; // Clear existing rows
-        tasks.forEach((task, index) => {
-            const statusHover = task.status.map(s =>
-                `<div><strong>${s.result}:</strong> Start: ${s.startTime}, End: ${s.endTime || 'N/A'}, Duration: ${s.duration || 'N/A'}</div>`
-            ).join("");
-
-            const row = `
-                <tr>
-                    <td>${task.runDate}</td>
-                    <td>${task.user}</td>
-                    <td>${task.language}</td>
-                    <td>
-                        <span class="badge bg-primary">${task.questionType}</span>
-                        <br>
-                        <a href="${task.inputRawUrl}" target="_blank">View Sheet</a>
-                    </td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input golden-answer-toggle" type="checkbox" ${task.isGoldenAnswer ? "checked" : ""} data-index="${index}">
-                        </div>
-                    </td>
-                    <td>
-                        <span class="status-label">${task.status[0].result}</span>
-                        <div class="status-hover">${statusHover}</div>
-                    </td>
-                    <td><a href="${task.finalUrl}" target="_blank">Final URL</a></td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                More Options
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                <li><a class="dropdown-item" href="#">View</a></li>
-                                <li><a class="dropdown-item" href="#">Re-Run</a></li>
-                                <li><a class="dropdown-item" href="#">Delete</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            tableBody.insertAdjacentHTML("beforeend", row);
-        });
-    }
-
-    // Initial table population
-    populateTable(tasksArray);
-
-    // Search functionality
-    searchInput.addEventListener("input", function () {
-        const searchTerm = this.value.toLowerCase();
-        const filteredTasks = tasksArray.filter(task =>
-            task.user.toLowerCase().includes(searchTerm) ||
-            task.language.toLowerCase().includes(searchTerm) ||
-            task.inputRawUrl.toLowerCase().includes(searchTerm)
-        );
-        populateTable(filteredTasks);
-    });
-
-    // Handle Golden Answer Toggle
-    document.addEventListener("change", function (e) {
-        if (e.target.classList.contains("golden-answer-toggle")) {
-            const taskIndex = e.target.dataset.index;
-            tasksArray[taskIndex].isGoldenAnswer = e.target.checked;
-            alert(`Golden Answer for task ${taskIndex + 1} is now ${e.target.checked ? "enabled" : "disabled"}`);
-        }
-    });
 });
