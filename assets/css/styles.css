@@ -359,11 +359,23 @@ button:hover {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.modal-body {
+    max-height: 60vh; /* Adjust height as needed */
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+}
+
 .modal-actions {
-    margin-top: 20px;
     display: flex;
     justify-content: space-between;
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding-top: 1rem;
 }
+
 
 #fetchTaskButton {
     margin-top: 50px; /* Adds spacing between the input and button */

@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         }
     }    
-    
     // Function to start the progress bar and set the generated link
     window.startProgress = function () {
         const statusSection = document.getElementById('statusSection');
@@ -133,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    
     // Function to show notifications
     function showNotification(title, message, type) {
         const notificationContainer = document.getElementById('notificationContainer');
@@ -165,7 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle Next Step
     window.handleNext = function () {
-        if (!validateStep(currentStep)) {
+        const flag = !validateStep(currentStep)
+        if (flag) {
             alert("Please complete the current step before proceeding.");
             return;
         }
@@ -181,7 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentStep === 2) getTemplateTypes();
 
-        if (currentStep === 7) generateModelFields();
+        // Generate dynamic model fields at Step 12
+        if (currentStep === 11) generateModelFields();
+
+        // Generate dynamic model fields at Step 14
+        if (currentStep === 13) generateColumnFields();
+
+        // Show additional information only for Translation Evals at Step 15
+        if (currentStep === 15) showAdditionalInfo();
 
         toggleButtons();
     };
@@ -200,11 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch template types dynamically at Step 2
         if (currentStep === 2) getTemplateTypes();
 
-        // Generate dynamic model fields at Step 8
-        if (currentStep === 8) generateModelFields();
+        // Generate dynamic model fields at Step 12
+        if (currentStep === 12) generateModelFields();
 
-        // Show additional information only for Translation Evals at Step 9
-        if (currentStep === 9) showAdditionalInfo();
+        // Generate dynamic model fields at Step 14
+        if (currentStep === 14) generateColumnFields();
 
         toggleButtons();
     };
@@ -223,16 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
             case 4:
                 return document.getElementById("replicationCount").value > 0;
             case 5:
-                const customLang = document.getElementById("customLanguageCode");
-                if (document.querySelector('input[name="languageCode"]:checked').value === "other") {
-                    return customLang.value.trim() !== "";
-                }
-                return true;
+                return !!document.querySelector('input[name="languageCode"]:checked');
             case 6:
-                return !!document.querySelector('input[name="matchingColumn"]:checked');
+                return !!document.querySelector('input[name="matchingCases"]:checked');
             case 7:
-                return document.getElementById("numberOfModels").value > 0;
+                return !!document.querySelector('input[name="nestedColumn"]:checked');
+            case 8:
+                return !!document.querySelector('input[name="multipleChoice"]:checked');
             case 9:
+                return !!document.querySelector('input[name="expertAnswer"]:checked');
+            case 10:
+                return !!document.querySelector('input[name="qualityReport"]:checked');
+            case 11:
+                return document.getElementById("numberOfModels").value > 0;
+            case 13:
+                return document.getElementById("numberOfColumnsChange").value > 0;
+            case 15:
                 const questionType = document.getElementById("questionType").value;
                 if (questionType === "Translation Evals") {
                     return document.getElementById("additionalInfo").value.trim() !== "";
@@ -274,14 +288,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Generate model fields dynamically at Step 8
+    // Generate model fields dynamically at Step 12
     function generateModelFields() {
         handleNext()
         const numberOfModels = document.getElementById("numberOfModels").value;
         const modelsWrapper = document.getElementById("modelsWrapper");
         modelsWrapper.innerHTML = ""; // Clear existing fields
 
-        console.log("Number of Models " + numberOfModels);
         for (let i = 1; i <= numberOfModels; i++) {
             const modelFieldSet = `
                 <div class="form-group">
@@ -292,6 +305,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             modelsWrapper.insertAdjacentHTML("beforeend", modelFieldSet);
+        }
+    }
+
+
+    // Generate column fields dynamically at Step 13
+    function generateColumnFields() {
+        handleNext()
+        const numberOfColumnsChange = document.getElementById("numberOfColumnsChange").value;
+        const columnsWrapper = document.getElementById("columnsWrapper");
+        columnsWrapper.innerHTML = ""; // Clear existing fields
+
+        for (let i = 1; i <= numberOfColumnsChange; i++) {
+            const columnFieldSet = `
+                <div class="form-group">
+                    <label>Actual Column ${i} Name</label>
+                    <input type="text" class="form-control" id="column${i}Name" placeholder="Enter column name">
+                    <label>New Column ${i} Name</label>
+                    <input type="text" class="form-control" id="newColumn${i}Name" placeholder="Enter new column name">
+                </div>
+            `;
+            columnsWrapper.insertAdjacentHTML("beforeend", columnFieldSet);
         }
     }
 
@@ -327,10 +361,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("prevButton").disabled = currentStep === 1;
         const nextButton = document.getElementById("nextButton");
 
-        if(currentStep === 7){
+        if(currentStep === 11){
             nextButton.textContent = "Generate Field";
             nextButton.onclick = generateModelFields;
-        }else if (currentStep === 9) {
+        }else if(currentStep === 13){
+            nextButton.textContent = "Generate Field";
+            nextButton.onclick = generateColumnFields;
+        }else if (currentStep === 15) {
             nextButton.textContent = "Review";
             nextButton.onclick = showSummary;
         } else {
@@ -352,21 +389,34 @@ document.addEventListener('DOMContentLoaded', () => {
             modelsSummary += `<p>Model ${i}: ${columnName} - ${modelName}</p>`;
         }
 
+        let columnsSummary = "";
+        const numberOfColumnsChange = document.getElementById("numberOfColumnsChange").value;
+        for (let i = 1; i <= numberOfColumnsChange; i++) {
+            const columnName = document.getElementById(`column${i}Name`).value;
+            const newColumnName = document.getElementById(`newColumn${i}Name`).value;
+            columnsSummary += `<p>Column ${i}: ${columnName} - ${newColumnName}</p>`;
+        }
+
         summaryContent.innerHTML = `
             <p><strong>Question Type:</strong> ${document.getElementById("questionType").value}</p>
             <p><strong>Template Type:</strong> ${document.getElementById("templateType").value}</p>
             <p><strong>Google Sheet URL:</strong> ${document.getElementById("urlInput").value}</p>
-            <p><strong>Replication Count:</strong> ${document.getElementById("replicationCount").value}</p>
-            <p><strong>Language Code:</strong> ${document.querySelector('input[name="languageCode"]:checked').value}</p>
-            <p><strong>Matching Column:</strong> ${document.querySelector('input[name="matchingColumn"]:checked').value}</p>
+            <p><strong>Number of replication:</strong> ${document.getElementById("replicationCount").value}</p>
+            <p><strong>What is the Language Code?</strong> ${document.querySelector('input[name="languageCode"]:checked').value}</p>
+            <p><strong>Does it have a Matching Cases?</strong> ${document.querySelector('input[name="matchingCases"]:checked').value}</p>
+            <p><strong>Does it have nested columns?</strong> ${document.querySelector('input[name="nestedColumn"]:checked').value}</p>
+            <p><strong>Do it have multiple choice columns?</strong> ${document.querySelector('input[name="multipleChoice"]:checked').value}</p>
+            <p><strong>Does it have expert Answer?</strong> ${document.querySelector('input[name="expertAnswer"]:checked').value}</p>
+            <p><strong>Does it have Quality Report?</strong> ${document.querySelector('input[name="qualityReport"]:checked').value}</p>
             <p><strong>Number of Models:</strong> ${numberOfModels}</p>
             ${modelsSummary}
+            <p><strong>Number of rename columns:</strong> ${numberOfColumnsChange}</p>
+            ${columnsSummary}
             <p><strong>Additional Info:</strong> ${document.getElementById("additionalInfo").value}</p>
         `;
 
         document.getElementById("summaryModal").classList.add("show");
     };
-
 
     // Extract Google Sheet ID from URL
     function extractGoogleSheetId(url) {
@@ -396,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
             questionType: document.getElementById("questionType").value,
             templateType: document.getElementById("templateType").value,
             languageCode: document.querySelector('input[name="languageCode"]:checked').value,
-            matchingColumn: document.querySelector('input[name="matchingColumn"]:checked').value,
+            matchingColumn: document.querySelector('input[name="matchingCases"]:checked').value,
             additionalInfo: document.getElementById("additionalInfo").value,
             url, // Keep the full URL for reference
         };
